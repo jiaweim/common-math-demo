@@ -8,9 +8,12 @@ import org.apache.commons.math3.optim.nonlinear.vector.jacobian.LevenbergMarquar
 
 import java.util.Arrays;
 
-public class CustomizeCurveFitterDemo {
-    class MyFunction implements ParametricUnivariateFunction {
-        public double value(double x, double ... parameters) {
+public class CustomizeCurveFitterDemo
+{
+    class MyFunction implements ParametricUnivariateFunction
+    {
+        public double value(double x, double... parameters)
+        {
             double a = parameters[0];
             double b = parameters[1];
             double c = parameters[2];
@@ -19,7 +22,8 @@ public class CustomizeCurveFitterDemo {
             return d + ((a - d) / (1 + Math.pow(x / c, b)));
         }
 
-        public double[] gradient(double x, double ... parameters) {
+        public double[] gradient(double x, double... parameters)
+        {
             double a = parameters[0];
             double b = parameters[1];
             double c = parameters[2];
@@ -42,8 +46,10 @@ public class CustomizeCurveFitterDemo {
     }
 
     ParametricUnivariateFunction function = new MyFunction();
+
     // 生成待拟合数据
-    public double[][] getPoints(ParametricUnivariateFunction function,double[] value) {
+    public double[][] getPoints(ParametricUnivariateFunction function, double[] value)
+    {
         double[][] xy = new double[6][2];
         xy[0] = new double[]{15, 4443};
         xy[1] = new double[]{31, 8493};
@@ -54,13 +60,14 @@ public class CustomizeCurveFitterDemo {
         return xy;
     }
 
-    public void curveFitter() {
+    public void curveFitter()
+    {
         ParametricUnivariateFunction function = new MyFunction();/*多项式函数*/
         double[] guess = {1500, 0.95, 65, 35000}; /*猜测值 依次为 a b c d 。必须和 gradient 方法返回数组对应*/
         double[][] points = getPoints(function, guess);/*待拟合数据*/
 
         // 初始化拟合
-        SimpleCurveFitter curveFitter = SimpleCurveFitter.create(function,guess);
+        SimpleCurveFitter curveFitter = SimpleCurveFitter.create(function, guess);
 
         // 添加数据点。带权重的点，我的理解这个点权重越大，拟合出来的曲线会更靠近这个点
         WeightedObservedPoints observedPoints = new WeightedObservedPoints();
@@ -78,9 +85,9 @@ public class CustomizeCurveFitterDemo {
 
         LevenbergMarquardtOptimizer optimizer = new LevenbergMarquardtOptimizer();
         CurveFitter<ParametricUnivariateFunction> curveFitter2 = new CurveFitter<ParametricUnivariateFunction>(optimizer);
-        curveFitter2.addObservedPoint( 15,  4443);
-        curveFitter2.addObservedPoint( 31,  8493);
-        curveFitter2.addObservedPoint( 62, 17586);
+        curveFitter2.addObservedPoint(15, 4443);
+        curveFitter2.addObservedPoint(31, 8493);
+        curveFitter2.addObservedPoint(62, 17586);
         curveFitter2.addObservedPoint(125, 30582);
         curveFitter2.addObservedPoint(250, 45087);
         curveFitter2.addObservedPoint(500, 50683);
@@ -88,7 +95,8 @@ public class CustomizeCurveFitterDemo {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         CustomizeCurveFitterDemo simpleCurveFitterDemo = new CustomizeCurveFitterDemo();
         simpleCurveFitterDemo.curveFitter();
     }
